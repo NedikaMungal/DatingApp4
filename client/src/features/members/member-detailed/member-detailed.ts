@@ -19,7 +19,7 @@ export class MemberDetailed implements OnInit {
   private accountService = inject(AccountService);
   private router = inject(Router);
   protected title = signal<string | undefined>('Profile');
-   protected isCurrentUser = computed(() => {
+  protected isCurrentUser = computed(() => {
     return this.accountService.currentUser()?.id === this.route.snapshot.paramMap.get('id');
   });
 
