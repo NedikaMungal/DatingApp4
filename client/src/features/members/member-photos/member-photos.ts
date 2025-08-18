@@ -8,6 +8,7 @@ import { User } from '../../../types/user';
 import { StarButton } from '../../../shared/star-button/star-button';
 import { DeleteButton } from '../../../shared/delete-button/delete-button';
 
+
 @Component({
   selector: 'app-member-photos',
   imports: [ImageUpload, StarButton, DeleteButton],
