@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 public class LikesController(ILikesRepository likesRepository) : BaseApiController
-{
+{    
     [HttpPost("{targetMemberId}")]
     public async Task<ActionResult> ToggleLike(string targetMemberId)
     {
@@ -44,7 +44,8 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
         return Ok(await likesRepository.GetCurrentMemberLikeIds(User.GetMemberId()));
     }
 
-    [HttpGet]
+
+     [HttpGet]
     public async Task<ActionResult<PaginatedResult<Member>>> GetMemberLikes(
         [FromQuery] LikesParams likesParams)
     {
@@ -53,4 +54,5 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
 
         return Ok(members);
     }
+  
 }

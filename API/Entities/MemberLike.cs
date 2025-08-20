@@ -1,7 +1,10 @@
+
+using System.ComponentModel.DataAnnotations.Schema;
 using System;
 
 namespace API.Entities;
 
+[Table("Likes")]
 public class MemberLike
 {
     public required string SourceMemberId { get; set; }

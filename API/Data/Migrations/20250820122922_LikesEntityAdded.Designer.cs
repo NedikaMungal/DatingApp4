@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250820080334_LikesEntityAdded")]
+    [Migration("20250820122922_LikesEntityAdded")]
     partial class LikesEntityAdded
     {
         /// <inheritdoc />
@@ -102,7 +102,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("TargetMemberId");
 
-                    b.ToTable("MemberLike");
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("API.Entities.Photo", b =>
