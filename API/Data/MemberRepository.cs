@@ -1,4 +1,11 @@
 using System;
+using API.DTOs;
+using API.Entities;
+using API.Extensions;
+using API.Helpers;
+using API.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using API.DTOs;
 using API.Entities;
 using API.Helpers;
 using API.Interfaces;
@@ -45,7 +52,21 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
 
         return await PaginationHelper.CreateAsync(query, memberParams.PageNumber, memberParams.PageSize);
     }
+    public async Task<IReadOnlyList<MessageDto>> GetMessageThread(string currentMemberId, string recipientId)
+    {
+        await context.Messages
+            .Where(x => x.RecipientId == currentMemberId
+                && x.SenderId == recipientId && x.DateRead == null)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.DateRead, DateTime.UtcNow));
 
+        return await context.Messages
+            .Where(x => (x.RecipientId == currentMemberId && x.SenderId == recipientId)
+                || (x.SenderId == currentMemberId && x.RecipientId == recipientId))
+            .OrderBy(x => x.MessageSent)
+            .Select(MessageExtensions.ToDtoProjection())
+            .ToListAsync();
+    }
     public async Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId)
     {
         return await context.Members
