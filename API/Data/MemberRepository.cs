@@ -5,11 +5,6 @@ using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using API.DTOs;
-using API.Entities;
-using API.Helpers;
-using API.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
