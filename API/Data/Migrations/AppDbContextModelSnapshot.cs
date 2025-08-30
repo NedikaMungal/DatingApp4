@@ -132,7 +132,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.MemberLike", b =>
@@ -147,7 +147,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("TargetMemberId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Message", b =>
@@ -185,7 +185,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("API.Entities.Photo", b =>
@@ -209,7 +209,7 @@ namespace API.Data.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
