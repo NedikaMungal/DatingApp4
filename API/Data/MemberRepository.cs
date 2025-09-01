@@ -15,12 +15,13 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
         return await context.Members.FindAsync(id);
     }
 
-    public async Task<Member?> GetMemberForUpdate(string id)
+    public async Task<Member?> GetMemberForUpdateAsync(string id)
     {
         return await context.Members
-            .Include(x => x.User)
-            .Include(x => x.Photos)
-            .SingleOrDefaultAsync(x => x.Id == id);
+                        .Include(x => x.User)
+                        .Include(x => x.Photos)
+                        .IgnoreQueryFilters()
+                        .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams)
@@ -42,7 +43,7 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
         query = memberParams.OrderBy switch
         {
             "created" => query.OrderByDescending(x => x.Created),
-             _ => query.OrderByDescending(x => x.LastActive)
+            _ => query.OrderByDescending(x => x.LastActive)
         };
 
         return await PaginationHelper.CreateAsync(query, memberParams.PageNumber, memberParams.PageSize);
@@ -72,5 +73,15 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
     public void Update(Member member)
     {
         context.Entry(member).State = EntityState.Modified;
+    }
+
+    public async Task<IEnumerable<Photo>> GetPhotosForMemberAsync(string userId, bool isCurrentUser)
+    {
+        var query = context.Members
+                        .Where(x => x.Id == userId)
+                        .SelectMany(x => x.Photos);
+
+        if (isCurrentUser) query = query.IgnoreQueryFilters();
+        return await query.ToListAsync();
     }
 }

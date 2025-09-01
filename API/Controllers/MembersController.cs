@@ -20,7 +20,7 @@ namespace API.Controllers
                                    IPhotoService photoService) : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery]MemberParams memberParams)
+        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] MemberParams memberParams)
         {
             memberParams.CurrentMemberId = User.GetMemberId();
             return Ok(await uow.MemberRepository.GetMembersAsync(memberParams));
@@ -40,7 +40,8 @@ namespace API.Controllers
         [HttpGet("{id}/photos")]
         public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
         {
-            return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(id));
+            var isCurrentUser = User.GetMemberId() == id;
+            return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(id, isCurrentUser));
         }
 
         [HttpPut]
@@ -83,15 +84,9 @@ namespace API.Controllers
                 MemberId = User.GetMemberId()
             };
 
-            if (member.ImageUrl == null)
-            {
-                member.ImageUrl = photo.Url;
-                member.User.ImageUrl = photo.Url;
-            }
-
             member.Photos.Add(photo);
 
-             if (await uow.Complete()) return photo;
+            if (await uow.Complete()) return photo;
 
             return BadRequest("Problem adding photo");
         }
@@ -140,7 +135,7 @@ namespace API.Controllers
 
             member.Photos.Remove(photo);
 
-             if (await uow.Complete()) return Ok();
+            if (await uow.Complete()) return Ok();
 
             return BadRequest("Problem deleting the photo");
         }
