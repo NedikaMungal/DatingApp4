@@ -14,8 +14,7 @@ export class Paginator {
   pageSizeOptions = input([5, 10, 20, 50]);
 
   constructor() {
-    console.log(this.pageNumber());
-  }
+    }
 
   pageChange = output<{pageNumber: number, pageSize: number}>();
 

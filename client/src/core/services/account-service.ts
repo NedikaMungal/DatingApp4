@@ -65,7 +65,7 @@ export class AccountService {
     user.roles = this.getRolesFromToken(user);
     this.currentUser.set(user);
     this.likesService.getLikeIds();
-    if (this.presenceService.hubConnection?.state === HubConnectionState.Connected)
+    if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected)
     {
       this.presenceService.createHubConnection(user);
     }
@@ -76,6 +76,7 @@ export class AccountService {
     localStorage.removeItem('filters');
     this.likesService.clearLikeIds();
     this.currentUser.set(null);
+    this.presenceService.stopHubConnection();
   }
 
   private getRolesFromToken(user: User): string[] {
