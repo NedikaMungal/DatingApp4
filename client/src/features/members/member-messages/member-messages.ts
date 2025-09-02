@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, model, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MessageService } from '../../../core/services/message-service';
 import { MemberService } from '../../../core/services/member-service';
 import { Message } from '../../../types/message';
@@ -20,7 +20,7 @@ export class MemberMessages implements OnInit, OnDestroy {
   private memberService = inject(MemberService);
   protected presenceService = inject(PresenceService);
   private route = inject(ActivatedRoute);
-  protected messageContent = '';
+  protected messageContent = model('');
 
   constructor() {
     effect(() => {
@@ -32,7 +32,7 @@ export class MemberMessages implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   
+
     this.route.parent?.paramMap.subscribe({
       next: params => {
         const otherUserId = params.get('id');
@@ -43,13 +43,12 @@ export class MemberMessages implements OnInit, OnDestroy {
   }
 
 
-    sendMessage() {
+  sendMessage() {
 
-      const recipientId = this.memberService.member()?.id;
-      console.log('ere' + recipientId);
-    if (!recipientId) return;
-    this.messageService.sendMessage(recipientId, this.messageContent)?.then(() => {
-      this.messageContent = '';
+    const recipientId = this.memberService.member()?.id;
+    if (!recipientId || !this.messageContent()) return;
+    this.messageService.sendMessage(recipientId, this.messageContent())?.then(() => {
+      this.messageContent.set('');
     })
   }
 
@@ -60,9 +59,9 @@ export class MemberMessages implements OnInit, OnDestroy {
       }
     })
   }
-    ngOnDestroy(): void {
-      this.messageService.stopHubConnection();
-    }
+  ngOnDestroy(): void {
+    this.messageService.stopHubConnection();
+  }
 
 }
 
