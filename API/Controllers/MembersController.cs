@@ -82,8 +82,14 @@ namespace API.Controllers
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId,
                 MemberId = User.GetMemberId()
+                //,  IsApproved = true //Auto approval
             };
 
+            if (member.ImageUrl == null)
+            {
+                member.ImageUrl = photo.Url;
+                member.User.ImageUrl = photo.Url;
+            }
             member.Photos.Add(photo);
 
             if (await uow.Complete()) return photo;

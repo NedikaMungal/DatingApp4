@@ -32,7 +32,6 @@ export class MemberMessages implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.route.parent?.paramMap.subscribe({
       next: params => {
         const otherUserId = params.get('id');
@@ -42,9 +41,7 @@ export class MemberMessages implements OnInit, OnDestroy {
     })
   }
 
-
   sendMessage() {
-
     const recipientId = this.memberService.member()?.id;
     if (!recipientId || !this.messageContent()) return;
     this.messageService.sendMessage(recipientId, this.messageContent())?.then(() => {
@@ -59,10 +56,8 @@ export class MemberMessages implements OnInit, OnDestroy {
       }
     })
   }
+
   ngOnDestroy(): void {
     this.messageService.stopHubConnection();
   }
-
 }
-
-
