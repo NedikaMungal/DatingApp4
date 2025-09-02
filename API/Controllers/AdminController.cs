@@ -71,7 +71,7 @@ public class AdminController(UserManager<AppUser> userManager, IUnitOfWork uow, 
         var photo = await uow.PhotoRepository.GetPhotoById(photoId);
         if (photo == null) return BadRequest("Could not get photo from db");
 
-        var member = await uow.MemberRepository.GetMemberForUpdate(photo.MemberId);
+        var member = await uow.MemberRepository.GetMemberForUpdateAsync(photo.MemberId);
         if (member == null) return BadRequest("Could not get member");
         photo.IsApproved = true;
         if (member.ImageUrl == null)
